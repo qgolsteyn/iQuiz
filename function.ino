@@ -12,7 +12,6 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with iQuiz.  If not, see <http://www.gnu.org/licenses/>.
-
 void start() {
   Serial.println("Demarage!");
   for(int p=0; p < maxPin ; p++){
@@ -213,4 +212,111 @@ int noteDurations[] = {
     noTone(buzzer);
   }
 }
+void function1(){
+    Serial.println("Debut de la manche!");
+  int var1=HIGH;
+  int var2=HIGH;
+  int var3=HIGH;
+  int var4=HIGH;
+  int repeat=0;
+  int x=NULL;
+  Serial.println("En attente d'un bouton!");
+do{
+  var1 = digitalRead(bigbutton[0]);
+  var2 = digitalRead(bigbutton[1]);
+  var3 = digitalRead(Buttontruth[0]);
+  var4 = digitalRead(Buttontruth[1]);
+} while (var1 == HIGH && var2 ==HIGH && var4==HIGH && var3==HIGH);
 
+if(var3==LOW){
+  Serial.println("Bouton vert detecte!");
+  wait();
+}
+else if(var4==LOW){
+  Serial.println("Bouton rouge detecte!");
+  oneplayer();
+}
+
+
+else if(var1==LOW){
+  Serial.println("Bouton de l'equipe A detecte!");
+  x=0;
+  digitalWrite(LEDteam[0],HIGH);
+musicpress();
+}
+else if(var2==LOW){
+  Serial.println("Bouton de l'equipe B detecte!");
+  x=1;
+  digitalWrite(LEDteam[1],HIGH);
+  musicpress();
+}
+test:;
+Serial.println("En attente d'un bouton!");
+do{
+  var3 = digitalRead(Buttontruth[0]);
+  var4 = digitalRead(Buttontruth[1]);
+} while (var3 == HIGH && var4 ==HIGH);
+
+if(var3==LOW){
+  Serial.println("Correct!");
+    digitalWrite(LEDteam[x],LOW);
+  digitalWrite(LEDtruth[0],HIGH);
+  musicgood();
+delay(3000);
+
+  digitalWrite(LEDtruth[0],LOW);
+}
+ else if(var4==LOW){
+Serial.println("Faux!");
+  digitalWrite(LEDteam[x],LOW);
+  digitalWrite(LEDtruth[1],HIGH);
+  musicbad();
+delay(3000);
+  digitalWrite(LEDtruth[1],LOW);
+  if (repeat==0){
+  if(x==0){
+    x=1;
+    Serial.println("Au tour de l'equipe B!");
+  }
+  else if(x==1){
+    x=0;
+    Serial.println("Au tour de l'equipe A!");
+  }
+  digitalWrite(LEDteam[x],HIGH);
+  repeat=1;
+  goto test;
+ 
+}
+  }
+}
+void serial(){
+  int inByte=0;
+  if(Serial.available() > 0)
+	{
+		//read a single byte.
+		inByte = Serial.read();
+
+		//Calling Serial.read() remove the byte from the Serial
+		//buffer. In this case, if there are multiple bytes that
+		//were sent, the next one will be handled on the next loop.
+		//You could also grab it by calling Serial.read() again
+
+		//check if the incoming byte was a command to toggle
+		//the state of the LED blinking
+		if(inByte == 'a')
+		{
+                  function1();
+}
+else if(inByte == 'b'){
+  oneplayer();
+}
+else if(inByte == 'c'){
+  wait();
+}
+}}
+  
+
+
+
+
+        	
